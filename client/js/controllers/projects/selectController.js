@@ -1,5 +1,5 @@
 
-xively.controller('selectController', ['$scope','$rootScope','Socket','localStorageService','sharedProperties','VisitorsService','storeService','$http','$location','SubscriptionFactory', 'LSFactory', 'API_URL','$window','$timeout',function($scope,$rootScope, Socket,localStorageService,sharedProperties,VisitorsService,storeService,$http,$location,SubscriptionFactory, LSFactory, API_URL,$window,$timeout){
+xively.controller('selectController', ['$scope','$rootScope','Socket','localStorageService','sharedProperties','VisitorsService','storeService','$http','$location','SubscriptionFactory', 'LSFactory', 'API_URL','$window','$timeout','ngToast',function($scope,$rootScope, Socket,localStorageService,sharedProperties,VisitorsService,storeService,$http,$location,SubscriptionFactory, LSFactory, API_URL,$window,$timeout,ngToast){
     
     
      Socket.on('sync', function(data){
@@ -115,17 +115,18 @@ xively.controller('selectController', ['$scope','$rootScope','Socket','localStor
              $scope.isFavorite=false;
              
             if($scope.selected===undefined) {
-                if (!$scope.trySelect) $scope.hideMsg();
+                ngToast.create('a toast message...');
                 $scope.trySelect=true;
                 return false;
             }
-            if($scope.selected=="") {
-                if (!$scope.trySelect) $scope.hideMsg();
+            if($scope.selected==="") {
+                ngToast.create('a toast message...');
                 $scope.trySelect=true;
                 return false;
             }
             if(typeof $scope.selected!=='object') {
-                if (!$scope.trySelect) $scope.hideMsg();
+                
+                ngToast.create('a toast message...');
                 $scope.trySelect=true;
                 return false;
             }
@@ -229,7 +230,47 @@ xively.controller('selectController', ['$scope','$rootScope','Socket','localStor
         },true);
         //function "Order" send mensaje to server and queue 
         $scope.order=function(){
+            console.log("*** SOLICITANDO LA ORDEN ***");
+            console.log("*** SOLICITANDO LA ORDEN ***");
+            console.info("*** SOLICITANDO LA ORDEN ***");
+            console.info("*** SOLICITANDO LA ORDEN ***");
+			
+			
+			
+		// Order	
+			
+		  $http.post(API_URL + '/add-order', { people: people }).
+          then(function(response) {
+             Toast.show("Sending Request....", 30);
+          }, function(response) {
+              Toast.show(response.statusText + " "+ response.data.error, 30);
+         });  
+         
+	  
+        /// end add order                
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            for(var k in $scope.currentPerson) {
+                 console.log(k, $scope.currentPerson[k]);
+            }
+            
+            
              $scope.people.push($scope.currentPerson);
+             
+             // current persona 
+             // todo el record +
+             // tagid del localstorage
+             // agregar en orders del firebase
+             // zone from  :  tagid
+             // zone to : 
              
              //send server 
              
@@ -261,5 +302,5 @@ xively.controller('selectController', ['$scope','$rootScope','Socket','localStor
         alert("error" + response.data);
     }
 	/*-----------------End Weather ********************************************/
-	
+    
 }]);
